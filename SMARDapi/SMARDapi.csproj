@@ -5,7 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.2-alpha1</Version>
+    <VersionPrefix>1.0.2</VersionPrefix>
+    <VersionSuffix>alpha</VersionSuffix> 
     <IncludeSymbols>True</IncludeSymbols>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/Matt-17/SMARDapi</PackageProjectUrl>
