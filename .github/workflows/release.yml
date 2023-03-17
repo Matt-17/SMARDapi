@@ -1,9 +1,8 @@
 name: NuGet Package Build
 
 on:
-  push:
-    branches:
-    - release
+  release:
+    types: [published]
     
 jobs:
   build:
