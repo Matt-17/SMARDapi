@@ -3,7 +3,7 @@
 /// <summary>
 /// Provides methods to work with Unix timestamps.
 /// </summary>
-public static class UnixTime
+internal static class UnixTime
 {
     /// <summary>
     /// Converts the specified <see cref="DateTime"/> object to a Unix timestamp.
