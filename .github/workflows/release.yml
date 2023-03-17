@@ -1,4 +1,4 @@
-name: NuGet Package Build
+name: NuGet package release
 
 on:
   release:
