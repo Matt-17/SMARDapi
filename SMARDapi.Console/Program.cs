@@ -1,5 +1,8 @@
 ﻿using SMARDapi;
-using SMARDapi.Filter;
+using SMARDapi.Marktpreis;
+using SMARDapi.Models;
+using SMARDapi.Models.FilterTypes;
+using SMARDapi.Stromerzeugung;
 
 var smardRegionType = SmardRegionType.DE;
 var smardResolutionType = SmardResolutionType.Hour;

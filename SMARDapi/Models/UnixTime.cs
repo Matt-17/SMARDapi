@@ -1,4 +1,4 @@
-﻿namespace SMARDapi.Helper;
+﻿namespace SMARDapi.Models;
 
 /// <summary>
 /// Provides methods to work with Unix timestamps.

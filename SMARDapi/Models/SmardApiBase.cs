@@ -1,8 +1,11 @@
 ﻿using System.Text.Json;
+using SMARDapi.Marktpreis;
+using SMARDapi.Models.FilterTypes;
+using SMARDapi.Models.Internal;
+using SMARDapi.Prognose;
+using SMARDapi.Stromverbrauch;
 
-using SMARDapi.Filter;
-
-namespace SMARDapi;
+namespace SMARDapi.Models;
 
 public abstract class SmardApiBase
 {
@@ -71,49 +74,5 @@ public abstract class SmardApiBase
         var response = await _httpClient.GetAsync(url);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsStringAsync();
-    }
-}
-
-public class TableResultInternal
-{
-}
-
-public class TableResult
-{
-    public TableResult(TableResultInternal? chartResultInternal)
-    {
-        throw new NotImplementedException();
-    }
-}
-
-internal class IndexChartDataInternal
-{
-    public long[] timestamps { get; set; }
-}
-
-public sealed class IndexChartData
-{
-    public IReadOnlyList<SmardTimestamp> Timestamps { get; }
-
-    internal IndexChartData(IEnumerable<long> timestamps)
-    {
-        Timestamps = timestamps.Select(t => new SmardTimestamp(t)).ToList();
-    }
-}
-
-public class SmardTimestamp
-{
-    public long Timestamp { get; }
-    public DateTime DateTime { get; }
-
-    public SmardTimestamp(long timestamp)
-    {
-        Timestamp = timestamp;
-        DateTime = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).DateTime;
-    }
-
-    public override string ToString()
-    {
-        return DateTime.ToString("dd.MM.yyyy HH:mm");
     }
 }
