@@ -8,27 +8,18 @@ public class SmardPrognoseApi : SmardApiBase
     {
     }
 
-    public async Task<string> GetIndexChartData(SmardRegionType region, SmardResolutionType resolution, SmardPrognoseFilterType filter)
+    public async Task<IndexChartData?> GetIndexChartData(SmardRegionType region, SmardResolutionType resolution, SmardPrognoseFilterType filter)
     {
-        var endpoint = $"chart_data/{filter} / {region} / {resolution}.json";
-        return await SendHttpGetRequest(endpoint);
+        return await GetIndexChartDataInternal(region, resolution, filter);
     }
 
-    public async Task<string> GetChartData(SmardRegionType region, SmardPrognoseFilterType filter, SmardRegionType regionCopy, SmardPrognoseFilterType filterCopy, SmardResolutionType resolution, long timestamp)
+    public async Task<ChartResult> GetChartData(SmardRegionType region, SmardPrognoseFilterType filter, SmardResolutionType resolution, SmardTimestamp timestamp)
     {
-        var endpoint = $"chart_data/{filter}/{region}/{filterCopy}_{regionCopy}_{resolution}_{timestamp}.json";
-        return await SendHttpGetRequest(endpoint);
+        return await GetChartDataInternal(region, filter, resolution, timestamp);
     }
 
-    public async Task<string> GetQuarterHourTableData(SmardRegionType region, SmardPrognoseFilterType filter, SmardRegionType regionCopy, SmardPrognoseFilterType filterCopy, long timestamp)
+    public async Task<TableResult> GetTableData(SmardRegionType region, SmardPrognoseFilterType filter, SmardTimestamp timestamp)
     {
-        var endpoint = $"table_data/{filter}/{region}/{filterCopy}_{regionCopy}_quarterhour_{timestamp}.json";
-        return await SendHttpGetRequest(endpoint);
-    }
-
-    public async Task<string> GetTableData(SmardRegionType region, SmardPrognoseFilterType filter, SmardRegionType regionCopy, SmardPrognoseFilterType filterCopy, long timestamp)
-    {
-        var endpoint = $"table_data/{filter}/{region}/{filterCopy}_{regionCopy}_{timestamp}.json";
-        return await SendHttpGetRequest(endpoint);
+        return await GetTableDataInternal(region, filter, timestamp);
     }
 }

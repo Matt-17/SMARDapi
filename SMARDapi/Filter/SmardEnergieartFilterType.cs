@@ -19,22 +19,3 @@ public class SmardEnergieartFilterType : SmardFilterType
     {
     }
 }
-public abstract class SmardFilterType
-{
-    public string Value { get; }
-
-    protected SmardFilterType(string value)
-    {
-        Value = value;
-    }
-
-    public override string ToString()
-    {
-        return Value;
-    }
-
-    public static implicit operator string(SmardFilterType filterType)
-    {
-        return filterType.Value;
-    }
-}

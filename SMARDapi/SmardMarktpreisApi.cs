@@ -1,4 +1,7 @@
-﻿using SMARDapi.Filter;
+﻿using System.Text.Json.Serialization;
+
+using SMARDapi.Filter;
+
 
 namespace SMARDapi;
 
@@ -8,27 +11,84 @@ public class SmardMarktpreisApi : SmardApiBase
     {
     }
 
-    public async Task<string> GetIndexChartData(SmardRegionType region, SmardResolutionType resolution, SmardMarktpreisFilterType filter)
+    public async Task<IndexChartData?> GetIndexChartData(SmardRegionType region, SmardResolutionType resolution, SmardMarktpreisFilterType filter)
     {
-        var endpoint = $"chart_data/{filter}/{region}/{resolution}.json";
-        return await SendHttpGetRequest(endpoint);
+        return await GetIndexChartDataInternal(region, resolution, filter);
     }
 
-    public async Task<string> GetChartData(SmardRegionType region, SmardMarktpreisFilterType filter, SmardRegionType regionCopy, SmardMarktpreisFilterType filterCopy, SmardResolutionType resolution, long timestamp)
+    public async Task<ChartResult> GetChartData(SmardRegionType region, SmardMarktpreisFilterType filter, SmardResolutionType resolution, SmardTimestamp dateTime)
     {
-        var endpoint = $"chart_data/{filter}/{region}/{filterCopy}_{regionCopy}_{resolution}_{timestamp}.json";
-        return await SendHttpGetRequest(endpoint);
+        return await GetChartDataInternal(region, filter, resolution, dateTime);
+    }
+}
+
+internal class MetaDataInternal
+{
+    [JsonPropertyName("version")]
+    public int Version { get; set; }
+    [JsonPropertyName("created")]
+    public long Created { get; set; }
+}
+
+internal class ChartResultInternal
+{
+    public ChartResultInternal()
+    {
     }
 
-    public async Task<string> GetQuarterHourTableData(SmardRegionType region, SmardMarktpreisFilterType filter, SmardRegionType regionCopy, SmardMarktpreisFilterType filterCopy, long timestamp)
+    [JsonPropertyName("meta_data")]
+    public MetaDataInternal MetaData { get; set; }
+    [JsonPropertyName("series")]
+    public double?[][] Series { get; set; }
+}
+public sealed class MetaData
+{
+    public int Version { get; set; }
+
+    public SmardTimestamp Created { get; set; }
+
+    public override string ToString()
     {
-        var endpoint = $"table_data/{filter}/{region}/{filterCopy}_{regionCopy}_quarterhour_{timestamp}.json";
-        return await SendHttpGetRequest(endpoint);
+        return $"{Version} - {Created}";
+    }
+}
+
+public sealed class ChartResult
+{
+    internal ChartResult(ChartResultInternal chartResultInternal)
+    {
+        MetaData = new MetaData
+        {
+            Version = chartResultInternal.MetaData.Version,
+            Created = new SmardTimestamp(chartResultInternal.MetaData.Created)
+        };
+
+
+        Series = new List<SmardValue>();
+        foreach (var series in chartResultInternal.Series)
+        {
+            var timestamp = (long)series[0];
+            Series.Add(new SmardValue
+            {
+                Timestamp = new SmardTimestamp(timestamp),
+                Value = (decimal?)series[1]
+            });
+        }
     }
 
-    public async Task<string> GetTableData(SmardRegionType region, SmardMarktpreisFilterType filter, SmardRegionType regionCopy, SmardMarktpreisFilterType filterCopy, long timestamp)
+    public MetaData MetaData { get; set; }
+
+    public List<SmardValue> Series { get; set; }
+}
+
+public sealed class SmardValue
+{
+    public SmardTimestamp Timestamp { get; set; }
+
+    public decimal? Value { get; set; }
+
+    public override string ToString()
     {
-        var endpoint = $"table_data/{filter}/{region}/{filterCopy}_{regionCopy}_{timestamp}.json";
-        return await SendHttpGetRequest(endpoint);
+        return $"{Timestamp}: {Value}";
     }
 }

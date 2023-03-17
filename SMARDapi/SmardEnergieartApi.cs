@@ -8,27 +8,19 @@ public class SmardEnergieartApi : SmardApiBase
     {
     }
 
-    public async Task<string> GetIndexChartData(SmardRegionType region, SmardResolutionType resolution, SmardEnergieartFilterType filter)
+    public async Task<IndexChartData?> GetIndexChartData(SmardRegionType region, SmardResolutionType resolution, SmardEnergieartFilterType filter)
     {
-        var endpoint = $"chart_data/{filter}/{region}/{resolution}.json";
-        return await SendHttpGetRequest(endpoint);
+        return await GetIndexChartDataInternal(region, resolution, filter);
     }
 
-    public async Task<string> GetChartData(SmardRegionType region, SmardEnergieartFilterType filter, SmardRegionType regionCopy, SmardEnergieartFilterType filterCopy, SmardResolutionType resolution, long timestamp)
+    public async Task<ChartResult> GetChartData(SmardRegionType region, SmardEnergieartFilterType filter, SmardResolutionType resolution, SmardTimestamp timestamp)
     {
-        var endpoint = $"chart_data/{filter}/{region}/{filterCopy}_{regionCopy}_{resolution}_{timestamp}.json";
-        return await SendHttpGetRequest(endpoint);
+        return await GetChartDataInternal(region, filter, resolution, timestamp);
     }
 
-    public async Task<string> GetQuarterHourTableData(SmardRegionType region, SmardEnergieartFilterType filter, SmardRegionType regionCopy, SmardEnergieartFilterType filterCopy, long timestamp)
+    public async Task<string> GetTableData(SmardRegionType region, SmardEnergieartFilterType filter, SmardTimestamp timestamp)
     {
-        var endpoint = $"table_data/{filter}/{region}/{filterCopy}_{regionCopy}_quarterhour_{timestamp}.json";
-        return await SendHttpGetRequest(endpoint);
-    }
-
-    public async Task<string> GetTableData(SmardRegionType region, SmardEnergieartFilterType filter, SmardRegionType regionCopy, SmardEnergieartFilterType filterCopy, long timestamp)
-    {
-        var endpoint = $"table_data/{filter}/{region}/{filterCopy}_{regionCopy}_{timestamp}.json";
+        var endpoint = $"table_data/{filter}/{region}/{filter}_{region}_quarterhour_{timestamp}.json";
         return await SendHttpGetRequest(endpoint);
     }
 }

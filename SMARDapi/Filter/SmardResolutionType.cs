@@ -1,6 +1,6 @@
 ﻿namespace SMARDapi.Filter;
 
-public struct SmardResolutionType
+public sealed class SmardResolutionType : SmardFilterType
 {
     public static readonly SmardResolutionType Hour = new("hour");
     public static readonly SmardResolutionType QuarterHour = new("quarterhour");
@@ -9,10 +9,7 @@ public struct SmardResolutionType
     public static readonly SmardResolutionType Month = new("month");
     public static readonly SmardResolutionType Year = new("year");
 
-    public string Value { get; }
-
-    private SmardResolutionType(string value)
+    private SmardResolutionType(string value) : base(value)
     {
-        Value = value;
     }
 }

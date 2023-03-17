@@ -13,7 +13,7 @@ public static class UnixTime
     public static long GetUnixTimestamp(DateTime dateTime)
     {
         var timeSpan = dateTime.ToUniversalTime() - DateTime.UnixEpoch;
-        return (long)timeSpan.TotalSeconds;
+        return (long)timeSpan.TotalMilliseconds;
     }
 
     /// <summary>
@@ -23,7 +23,7 @@ public static class UnixTime
     /// <returns>A <see cref="DateTime"/> object in the local time zone.</returns>
     public static DateTime FromUnixTimestamp(long timestamp)
     {
-        return DateTime.UnixEpoch.AddSeconds(timestamp).ToLocalTime();
+        return DateTime.UnixEpoch.AddMilliseconds(timestamp).ToLocalTime();
     }
 
     /// <summary>
