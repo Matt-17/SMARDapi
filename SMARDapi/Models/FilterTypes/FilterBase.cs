@@ -9,7 +9,7 @@ public abstract class SmardFilterType
 /// Represents a generic SMARD (Strommarktdaten) filter type.
 /// </summary>
 /// <typeparam name="T">The derived filter type.</typeparam>
-public abstract class SmardFilterType<T> : SmardFilterType where T : SmardFilterType<T>
+public abstract class FilterBase<T> : SmardFilterType where T : FilterBase<T>
 {
     /// <summary>
     /// Stores instances of the derived filter type.
@@ -22,10 +22,10 @@ public abstract class SmardFilterType<T> : SmardFilterType where T : SmardFilter
     private string Value { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="SmardFilterType{T}"/> class.
+    /// Initializes a new instance of the <see cref="FilterBase{T}"/> class.
     /// </summary>
     /// <param name="value">The string value representing the filter type.</param>
-    protected SmardFilterType(string value)
+    protected FilterBase(string value)
     {
         Value = value;
 

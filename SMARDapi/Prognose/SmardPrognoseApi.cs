@@ -24,7 +24,7 @@ public class SmardPrognoseApi : SmardApiBase
     /// <param name="resolution">The time resolution of the data.</param>
     /// <param name="filter">The Prognose filter type.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the index chart data or null if not available.</returns>
-    public async Task<IndexChartData?> GetIndexChartData(SmardRegionType region, SmardResolutionType resolution, SmardPrognoseFilterType filter)
+    public async Task<IndexChartData?> GetIndexChartData(Regions region, Resolutions resolution, PrognoseTypes filter)
     {
         return await GetIndexChartDataInternal(region, resolution, filter);
     }
@@ -37,7 +37,7 @@ public class SmardPrognoseApi : SmardApiBase
     /// <param name="resolution">The time resolution of the data.</param>
     /// <param name="timestamp">The date and time for the requested data.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the chart data.</returns>
-    public async Task<ChartResult> GetChartData(SmardRegionType region, SmardPrognoseFilterType filter, SmardResolutionType resolution, SmardTimestamp timestamp)
+    public async Task<ChartResult> GetChartData(Regions region, PrognoseTypes filter, Resolutions resolution, SmardTimestamp timestamp)
     {
         return await GetChartDataInternal(region, filter, resolution, timestamp);
     }
@@ -49,7 +49,7 @@ public class SmardPrognoseApi : SmardApiBase
     /// <param name="filter">The Prognose filter type.</param>
     /// <param name="timestamp">The date and time for the requested data.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the table data.</returns>
-    public async Task<TableResult> GetTableData(SmardRegionType region, SmardPrognoseFilterType filter, SmardTimestamp timestamp)
+    public async Task<TableResult> GetTableData(Regions region, PrognoseTypes filter, SmardTimestamp timestamp)
     {
         return await GetTableDataInternal(region, filter, timestamp);
     }

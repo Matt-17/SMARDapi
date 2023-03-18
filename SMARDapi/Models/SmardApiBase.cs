@@ -17,7 +17,7 @@ public abstract class SmardApiBase
         _httpClient = httpClient;
     }
 
-    protected async Task<IndexChartData?> GetIndexChartDataInternal(SmardRegionType region, SmardResolutionType resolution, SmardFilterType filter)
+    protected async Task<IndexChartData?> GetIndexChartDataInternal(Regions region, Resolutions resolution, SmardFilterType filter)
     {
         var endpoint = $"chart_data/{filter}/{region}/index_{resolution}.json";
         var jsonString = await SendHttpGetRequest(endpoint);
@@ -27,7 +27,7 @@ public abstract class SmardApiBase
         return chartData == null ? null : new IndexChartData(chartData.timestamps);
     }
 
-    protected async Task<ChartResult> GetChartDataInternal(SmardRegionType region, SmardFilterType filter, SmardResolutionType resolution, SmardTimestamp dateTime)
+    protected async Task<ChartResult> GetChartDataInternal(Regions region, SmardFilterType filter, Resolutions resolution, SmardTimestamp dateTime)
     {
         var timestamp = dateTime.Timestamp;
 
@@ -49,7 +49,7 @@ public abstract class SmardApiBase
         return chartResult;
     }
 
-    protected async Task<TableResult> GetTableDataInternal(SmardRegionType region, SmardPrognoseFilterType filter, SmardTimestamp timestamp)
+    protected async Task<TableResult> GetTableDataInternal(Regions region, PrognoseTypes filter, SmardTimestamp timestamp)
     {
         var endpoint = $"table_data/{filter}/{region}/{filter}_{region}_quarterhour_{timestamp}.json";
         var json = await SendHttpGetRequest(endpoint);

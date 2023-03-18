@@ -4,8 +4,8 @@ using SMARDapi.Models;
 using SMARDapi.Models.FilterTypes;
 using SMARDapi.Stromerzeugung;
 
-var smardRegionType = SmardRegionType.DE;
-var smardResolutionType = SmardResolutionType.Hour;
+var smardRegionType = Regions.DE;
+var smardResolutionType = Resolutions.Hour;
 {
     var httpClient = new HttpClient();
     var apiClient = new SmardMarktpreisApi(httpClient);
@@ -13,7 +13,7 @@ var smardResolutionType = SmardResolutionType.Hour;
     try
     {
         // Get index chart data for Germany at hourly resolution for the last month
-        var smardMarktpreisFilterType = SmardMarktpreisFilterType.DeutschlandLuxemburg;
+        var smardMarktpreisFilterType = MarktpreisTypes.DeutschlandLuxemburg;
         var indexChartData = await apiClient.GetIndexChartData(smardRegionType, smardResolutionType, smardMarktpreisFilterType);
         Console.WriteLine(indexChartData);
 
@@ -36,7 +36,7 @@ var smardResolutionType = SmardResolutionType.Hour;
     try
     {
         // Get index chart data for Germany at hourly resolution for the last month
-        var smardEnergieartFilterType = SmardEnergieartFilterType.WindOffshore;
+        var smardEnergieartFilterType = EnergieartTypes.WindOffshore;
         var indexChartData = await apiClient.GetIndexChartData(smardRegionType, smardResolutionType, smardEnergieartFilterType);
         Console.WriteLine(indexChartData);
 

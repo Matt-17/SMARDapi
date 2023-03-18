@@ -24,7 +24,7 @@ public class SmardEnergieartApi : SmardApiBase
     /// <param name="resolution">The time resolution of the data.</param>
     /// <param name="filter">The Energieart filter type.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the index chart data or null if not available.</returns>
-    public async Task<IndexChartData?> GetIndexChartData(SmardRegionType region, SmardResolutionType resolution, SmardEnergieartFilterType filter)
+    public async Task<IndexChartData?> GetIndexChartData(Regions region, Resolutions resolution, EnergieartTypes filter)
     {
         return await GetIndexChartDataInternal(region, resolution, filter);
     }
@@ -37,7 +37,7 @@ public class SmardEnergieartApi : SmardApiBase
     /// <param name="resolution">The time resolution of the data.</param>
     /// <param name="timestamp">The date and time for the requested data.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the chart data.</returns>
-    public async Task<ChartResult> GetChartData(SmardRegionType region, SmardEnergieartFilterType filter, SmardResolutionType resolution, SmardTimestamp timestamp)
+    public async Task<ChartResult> GetChartData(Regions region, EnergieartTypes filter, Resolutions resolution, SmardTimestamp timestamp)
     {
         return await GetChartDataInternal(region, filter, resolution, timestamp);
     }
@@ -49,7 +49,7 @@ public class SmardEnergieartApi : SmardApiBase
     /// <param name="filter">The Energieart filter type.</param>
     /// <param name="timestamp">The date and time for the requested data.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the table data as a string.</returns>
-    public async Task<string> GetTableData(SmardRegionType region, SmardEnergieartFilterType filter, SmardTimestamp timestamp)
+    public async Task<string> GetTableData(Regions region, EnergieartTypes filter, SmardTimestamp timestamp)
     {
         var endpoint = $"table_data/{filter}/{region}/{filter}_{region}_quarterhour_{timestamp}.json";
         return await SendHttpGetRequest(endpoint);

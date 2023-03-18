@@ -14,6 +14,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Version>1.0.5.0</Version>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE.txt">

@@ -23,7 +23,7 @@ public class SmardMarktpreisApi : SmardApiBase
     /// <param name="resolution">The time resolution of the data.</param>
     /// <param name="filter">The Marktpreis filter type.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the index chart data or null if not available.</returns>
-    public async Task<IndexChartData?> GetIndexChartData(SmardRegionType region, SmardResolutionType resolution, SmardMarktpreisFilterType filter)
+    public async Task<IndexChartData?> GetIndexChartData(Regions region, Resolutions resolution, MarktpreisTypes filter)
     {
         return await GetIndexChartDataInternal(region, resolution, filter);
     }
@@ -36,7 +36,7 @@ public class SmardMarktpreisApi : SmardApiBase
     /// <param name="resolution">The time resolution of the data.</param>
     /// <param name="dateTime">The date and time for the requested data.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains the chart data.</returns>
-    public async Task<ChartResult> GetChartData(SmardRegionType region, SmardMarktpreisFilterType filter, SmardResolutionType resolution, SmardTimestamp dateTime)
+    public async Task<ChartResult> GetChartData(Regions region, MarktpreisTypes filter, Resolutions resolution, SmardTimestamp dateTime)
     {
         return await GetChartDataInternal(region, filter, resolution, dateTime);
     }
