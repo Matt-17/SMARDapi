@@ -1,12 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <VersionPrefix>1.0.4</VersionPrefix>
-    <VersionSuffix>alpha.3</VersionSuffix>
     <IncludeSymbols>False</IncludeSymbols>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/Matt-17/SMARDapi</PackageProjectUrl>
@@ -14,7 +12,7 @@
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>1.0.5.0</Version>
+    <PackageId>Code-iX.$(AssemblyName)</PackageId>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE.txt">

@@ -7,7 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMARDapi.Tests", "SMARDapi.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMARDapi", "SMARDapi\SMARDapi.csproj", "{E06A7F95-EA5B-4F80-847F-8824FB1557AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMARDapi.Console", "SMARDapi.Console\SMARDapi.Console.csproj", "{7D213D82-5413-4533-B7B4-801D2FA6B4F7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SMARDapi.Console", "SMARDapi.Console\SMARDapi.Console.csproj", "{7D213D82-5413-4533-B7B4-801D2FA6B4F7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2C22782C-FCD1-4361-9F2B-BCF11C5D2072}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
