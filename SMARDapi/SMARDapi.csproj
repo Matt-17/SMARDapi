@@ -13,6 +13,7 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageId>Code-iX.$(AssemblyName)</PackageId>
+    <RepositoryUrl>https://github.com/Matt-17/SMARDapi</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\LICENSE.txt">
