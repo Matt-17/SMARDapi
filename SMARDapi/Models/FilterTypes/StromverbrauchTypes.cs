@@ -1,6 +1,4 @@
-﻿using SMARDapi.Models.FilterTypes;
-
-namespace SMARDapi.Stromverbrauch;
+﻿namespace SMARDapi.Models.FilterTypes;
 
 /// <summary>
 /// Represents the SMARD (Strommarktdaten) electricity consumption filter options.

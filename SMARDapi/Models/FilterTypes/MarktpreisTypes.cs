@@ -1,6 +1,6 @@
-﻿using SMARDapi.Models.FilterTypes;
+﻿using System.Collections;
 
-namespace SMARDapi.Marktpreis;
+namespace SMARDapi.Models.FilterTypes;
 
 /// <summary>
 /// Represents the SMARD (Strommarktdaten) market price filter options for different regions.
@@ -8,7 +8,7 @@ namespace SMARDapi.Marktpreis;
 public sealed class MarktpreisTypes : FilterBase<MarktpreisTypes>
 {
     /// <summary>
-    /// Represents the region "DeutschlandLuxemburg" (Germany & Luxembourg) with the value "4169".
+    /// Represents the region "DeutschlandLuxemburg" (Germany &amp; Luxembourg) with the value "4169".
     /// </summary>
     public static readonly MarktpreisTypes DeutschlandLuxemburg = new("4169");
 

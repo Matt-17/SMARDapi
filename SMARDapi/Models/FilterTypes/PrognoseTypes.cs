@@ -1,6 +1,6 @@
-﻿using SMARDapi.Models.FilterTypes;
+﻿using System.Collections;
 
-namespace SMARDapi.Prognose;
+namespace SMARDapi.Models.FilterTypes;
 
 /// <summary>
 /// Represents the SMARD (Strommarktdaten) prognosis filter options.

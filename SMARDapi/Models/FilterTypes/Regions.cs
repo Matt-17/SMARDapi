@@ -1,9 +1,11 @@
-﻿namespace SMARDapi.Models.FilterTypes;
+﻿using System.Collections;
+
+namespace SMARDapi.Models.FilterTypes;
 
 /// <summary>
 /// Represents the SMARD (Strommarktdaten) region filter options.
 /// </summary>
-public sealed class Regions : FilterBase<Regions>
+public sealed class Regions : FilterBase<Regions>   , IEnumerable<Regions>
 {
     /// <summary>
     /// Represents the region "DE" (Germany) with the value "DE".
@@ -21,12 +23,12 @@ public sealed class Regions : FilterBase<Regions>
     public static Regions LU = new("LU");
 
     /// <summary>
-    /// Represents the region "DELU" (Germany & Luxembourg) with the value "DE-LU".
+    /// Represents the region "DELU" (Germany &amp; Luxembourg) with the value "DE-LU".
     /// </summary>
     public static Regions DELU = new("DE-LU");
 
     /// <summary>
-    /// Represents the region "DEATLU" (Germany, Austria & Luxembourg) with the value "DE-AT-LU".
+    /// Represents the region "DEATLU" (Germany, Austria &amp; Luxembourg) with the value "DE-AT-LU".
     /// </summary>
     public static Regions DEATLU = new("DE-AT-LU");
 
@@ -66,5 +68,25 @@ public sealed class Regions : FilterBase<Regions>
     /// <param name="value">The string value representing the region.</param>
     private Regions(string value) : base(value)
     {
+    }
+
+    public IEnumerator<Regions> GetEnumerator()
+    {
+        yield return DE;
+        yield return AT;
+        yield return LU;
+        yield return DELU;
+        yield return DEATLU;
+        yield return Hertz50;
+        yield return Amprion;
+        yield return TenneT;
+        yield return TransnetBW;
+        yield return APG;
+        yield return Creos;
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }

@@ -2,6 +2,9 @@
 
 namespace SMARDapi.Models;
 
+/// <summary>
+/// Represents a single value of a time series.
+/// </summary>
 public sealed class ChartResult
 {
     internal ChartResult(ChartResultInternal chartResultInternal)
@@ -25,7 +28,13 @@ public sealed class ChartResult
         }
     }
 
+    /// <summary>
+    /// Meta data of the result.
+    /// </summary>
     public MetaData MetaData { get; set; }
 
+    /// <summary>
+    /// List of values for the chart data.
+    /// </summary>
     public List<SmardValue> Series { get; set; }
 }

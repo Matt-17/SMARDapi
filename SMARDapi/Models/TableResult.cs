@@ -2,10 +2,36 @@
 
 namespace SMARDapi.Models;
 
-public sealed class TableResult
+/// <summary>
+/// Result of a table request.
+/// </summary>
+public class TableResult
 {
-    internal TableResult(TableResultInternal? chartResultInternal)
+    internal TableResult(TableResultInternal tableResultInternal)
     {
-        throw new NotImplementedException();
+        if (tableResultInternal == null)
+            throw new ArgumentNullException(nameof(tableResultInternal));
+
+        MetaData = new MetaData
+        {
+            Version = tableResultInternal.MetaData.Version,
+            Created = new SmardTimestamp(tableResultInternal.MetaData.Created)
+        };
+
+        Series = tableResultInternal.Series[0].Values.Select(value => new SmardValue
+        {
+            Timestamp = new SmardTimestamp(value.Timestamp),
+            Value = value.Versions.FirstOrDefault()?.Value
+        }).ToList();
     }
+
+    /// <summary>
+    /// Meta data of the result.
+    /// </summary>
+    public MetaData MetaData { get; set; }
+
+    /// <summary>
+    /// List of values for the table data.
+    /// </summary>
+    public List<SmardValue> Series { get; set; }
 }

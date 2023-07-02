@@ -1,10 +1,5 @@
 ﻿namespace SMARDapi.Models.FilterTypes;
 
-public abstract class SmardFilterType
-{
-}
-
-
 /// <summary>
 /// Represents a generic SMARD (Strommarktdaten) filter type.
 /// </summary>
@@ -12,14 +7,9 @@ public abstract class SmardFilterType
 public abstract class FilterBase<T> : SmardFilterType where T : FilterBase<T>
 {
     /// <summary>
-    /// Stores instances of the derived filter type.
-    /// </summary>
-    private static readonly Dictionary<string, T> Instances = new();
-
-    /// <summary>
     /// Gets the string value associated with the filter type.
     /// </summary>
-    private string Value { get; }
+    protected string Value { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="FilterBase{T}"/> class.
@@ -28,11 +18,6 @@ public abstract class FilterBase<T> : SmardFilterType where T : FilterBase<T>
     protected FilterBase(string value)
     {
         Value = value;
-
-        if (!Instances.ContainsKey(value))
-        {
-            Instances[value] = (T)this;
-        }
     }
 
     /// <summary>
@@ -40,9 +25,4 @@ public abstract class FilterBase<T> : SmardFilterType where T : FilterBase<T>
     /// </summary>
     /// <returns>The string value associated with the filter type.</returns>
     public override string ToString() => Value;
-
-    /// <summary>
-    /// Gets a read-only list of all instances of the derived filter type.
-    /// </summary>
-    public static IReadOnlyList<T> Values => new List<T>(Instances.Values).AsReadOnly();
 }

@@ -13,7 +13,7 @@ public sealed class MetaData
     /// <summary>
     /// Gets or sets the creation timestamp of the request.
     /// </summary>
-    public SmardTimestamp Created { get; set; }
+    public SmardTimestamp Created { get; set; } = null!;
 
     /// <summary>
     /// Returns a string representation of the metadata.

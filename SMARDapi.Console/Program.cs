@@ -1,56 +1,39 @@
-﻿using SMARDapi;
-using SMARDapi.Marktpreis;
+﻿using SMARDapi.Console;
 using SMARDapi.Models;
 using SMARDapi.Models.FilterTypes;
-using SMARDapi.Stromerzeugung;
 
-var smardRegionType = Regions.DE;
-var smardResolutionType = Resolutions.Hour;
+
+using var client = new SmardClient();
+
+// dictionary with all EnergieartTypes
+
+
+try
 {
-    var httpClient = new HttpClient();
-    var apiClient = new SmardMarktpreisApi(httpClient);
+    // Get all Energiearten
 
-    try
+    foreach (var energieart in EnergieartTypes.Values)
     {
-        // Get index chart data for Germany at hourly resolution for the last month
-        var smardMarktpreisFilterType = MarktpreisTypes.DeutschlandLuxemburg;
-        var indexChartData = await apiClient.GetIndexChartData(smardRegionType, smardResolutionType, smardMarktpreisFilterType);
-        Console.WriteLine(indexChartData);
+        // get the name of the Energieart
+        var energieartName = energieart.DisplayName;
 
-        // Get quarter-hour table data for Germany for a specific timestamp
-        var timestamp = indexChartData.Timestamps.Last();
-        // Get table data for Germany for a specific timestamp
-        var tableData = await apiClient.GetChartData(smardRegionType, smardMarktpreisFilterType, smardResolutionType, timestamp);
-        Console.WriteLine(tableData);
-    }
-    catch (HttpRequestException ex)
-    {
-        Console.WriteLine($"Error: {ex.Message}");
-    }
+        // Fetch the table data for the Energieart
+        var tableResult = await client.GetEnergieartTableData(energieart);
 
-}
-{
-    var httpClient = new HttpClient();
-    var apiClient = new SmardEnergieartApi(httpClient);
+        // Calculate the total value for the Energieart
+        var totalValue = tableResult.Series.Last(x => x.Value != null);
 
-    try
-    {
-        // Get index chart data for Germany at hourly resolution for the last month
-        var smardEnergieartFilterType = EnergieartTypes.WindOffshore;
-        var indexChartData = await apiClient.GetIndexChartData(smardRegionType, smardResolutionType, smardEnergieartFilterType);
-        Console.WriteLine(indexChartData);
+        // Generate ASCII bar
+        var asciiBarGenerator = new AsciiBarGenerator(energieartName, 1000); // Adjust the max value as needed
+        var asciiBar = asciiBarGenerator.GenerateAsciiBar(totalValue.Value ?? 0);
 
-        // Get chart data for Germany at hourly resolution for the last month
-        var timestamp = indexChartData.Timestamps.Last();
-        var chartData = await apiClient.GetChartData(smardRegionType, smardEnergieartFilterType, smardResolutionType, timestamp);
-        Console.WriteLine(chartData);
-
-        // Get quarter-hour table data for Germany for a specific timestamp
-        var quarterHourTableData = await apiClient.GetTableData(smardRegionType, smardEnergieartFilterType, timestamp);
-        Console.WriteLine(quarterHourTableData);
-    }
-    catch (HttpRequestException ex)
-    {
-        Console.WriteLine($"Error: {ex.Message}");
+        // Display Energieart with ASCII bar
+        Console.WriteLine($"{asciiBar}");
     }
 }
+catch (Exception ex)
+{
+    Console.WriteLine($"Error: {ex.Message}");
+}
+
+Console.ReadLine();

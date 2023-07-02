@@ -1,6 +1,9 @@
-﻿namespace SMARDapi.Models.Internal;
+﻿using System.Text.Json.Serialization;
+
+namespace SMARDapi.Models.Internal;
 
 internal class IndexChartDataInternal
 {
-    public long[] timestamps { get; set; }
+    [JsonPropertyName("timestamps")]
+    public long[] Timestamps { get; set; } = null!;
 }

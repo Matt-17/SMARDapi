@@ -1,16 +1,31 @@
 ﻿namespace SMARDapi.Models;
 
+/// <summary>
+/// Represents a timestamp used in the SMARD (Strommarktdaten) API.
+/// </summary>
 public class SmardTimestamp
 {
-    public long Timestamp { get; }
+    /// <summary>
+    /// The value of the timestamp.
+    /// </summary>
+    public long Value { get; }
+
+    /// <summary>
+    /// The <see cref="DateTime"/> representation of the timestamp.
+    /// </summary>
     public DateTime DateTime { get; }
 
-    public SmardTimestamp(long timestamp)
+    /// <summary>
+    /// Creates a new instance of <see cref="SmardTimestamp"/>.
+    /// </summary>
+    /// <param name="value"></param>
+    public SmardTimestamp(long value)
     {
-        Timestamp = timestamp;
-        DateTime = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).DateTime;
+        Value = value;
+        DateTime = DateTimeOffset.FromUnixTimeMilliseconds(value).DateTime;
     }
 
+    /// <inheritdoc />
     public override string ToString()
     {
         return DateTime.ToString("dd.MM.yyyy HH:mm");
