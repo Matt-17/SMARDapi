@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 
 using Microsoft.Extensions.Logging;
@@ -9,26 +10,21 @@ using SMARDapi.Models.Internal;
 
 namespace SMARDapi.Models;
 
-/// <summary>                
-/// SmardApiClient class to interact with the Smard API.
+/// <summary>
+/// Client for direct access to the SMARD API endpoints.
 /// </summary>
 public sealed class SmardApiClient : ISmardApiClient
 {
     private readonly ILogger _logger;
     internal const string BaseUrl = "https://www.smard.de/app/";
 
-    /// <summary>
-    /// 
-    /// </summary>
     private HttpClient HttpClient { get; }
 
-    #region ctor
-
     /// <summary>
-    /// Primary constructor that takes HttpClient and ILoggerFactory instances for initialization.
+    /// Creates a new client using the provided HTTP client and logger factory.
     /// </summary>
-    /// <param name="httpClient">An instance of HttpClient.</param>
-    /// <param name="loggerFactory">An instance of ILoggerFactory.</param>
+    /// <param name="httpClient">The HTTP client used for requests.</param>
+    /// <param name="loggerFactory">The logger factory used for diagnostics.</param>
     public SmardApiClient(HttpClient httpClient, ILoggerFactory loggerFactory)
     {
         HttpClient = httpClient;
@@ -37,112 +33,114 @@ public sealed class SmardApiClient : ISmardApiClient
     }
 
     /// <summary>
-    /// Constructor for when only HttpClient is provided.
+    /// Creates a new client using the provided HTTP client.
     /// </summary>
-    /// <param name="httpClient">An instance of HttpClient.</param>
+    /// <param name="httpClient">The HTTP client used for requests.</param>
     public SmardApiClient(HttpClient httpClient) : this(httpClient, NullLoggerFactory.Instance)
     {
     }
 
     /// <summary>
-    /// Constructor for when only ILoggerFactory is provided.
+    /// Creates a new client using the provided logger factory.
     /// </summary>
-    /// <param name="loggerFactory">An instance of ILoggerFactory.</param>
+    /// <param name="loggerFactory">The logger factory used for diagnostics.</param>
     public SmardApiClient(ILoggerFactory loggerFactory) : this(new HttpClient(), loggerFactory)
     {
     }
 
     /// <summary>
-    /// Default constructor which initializes the HttpClient and ILogger with default values.
+    /// Creates a new client using default dependencies.
     /// </summary>
     public SmardApiClient() : this(new HttpClient(), NullLoggerFactory.Instance)
     {
     }
-    #endregion
 
     /// <inheritdoc/>
-    public async Task<IndexChartData?> GetMarktpreisIndexChartData(Regions region, Resolutions resolution, MarktpreisTypes filter)
+    public Task<IndexChartData> GetMarktpreisIndexChartData(Regions region, Resolutions resolution, MarktpreisTypes filter, CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("GetMarktpreisIndexChartData({region}, {resolution}, {filter})", region, resolution, filter);
-        return await GetIndexChartDataInternal(region, resolution, filter);
+        return GetIndexChartDataInternal(region, resolution, filter.ToString(), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<ChartResult> GetMarktpreisChartData(Regions region, MarktpreisTypes filter, Resolutions resolution, SmardTimestamp dateTime)
+    public Task<ChartResult> GetMarktpreisChartData(Regions region, MarktpreisTypes filter, Resolutions resolution, SmardTimestamp dateTime, CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("GetMarktpreisChartData({region}, {filter}, {resolution}, {dateTime})", region, filter, resolution, dateTime);
-        return await GetChartDataInternal(region, filter, resolution, dateTime);
+        return GetChartDataInternal(region, filter.ToString(), resolution, dateTime, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<IndexChartData?> GetPrognoseIndexChartData(Regions region, Resolutions resolution, PrognoseTypes filter)
+    public Task<IndexChartData> GetPrognoseIndexChartData(Regions region, Resolutions resolution, PrognoseTypes filter, CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("GetPrognoseIndexChartData({region}, {resolution}, {filter})", region, resolution, filter);
-        return await GetIndexChartDataInternal(region, resolution, filter);
+        return GetIndexChartDataInternal(region, resolution, filter.ToString(), cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<ChartResult> GetPrognoseChartData(Regions region, PrognoseTypes filter, Resolutions resolution, SmardTimestamp timestamp)
+    public Task<ChartResult> GetPrognoseChartData(Regions region, PrognoseTypes filter, Resolutions resolution, SmardTimestamp timestamp, CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("GetPrognoseChartData({region}, {filter}, {resolution}, {timestamp})", region, filter, resolution, timestamp);
-        return await GetChartDataInternal(region, filter, resolution, timestamp);
+        return GetChartDataInternal(region, filter.ToString(), resolution, timestamp, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<TableResult> GetPrognoseTableData(Regions region, PrognoseTypes filter, SmardTimestamp timestamp)
+    public Task<TableResult> GetPrognoseTableData(Regions region, PrognoseTypes filter, SmardTimestamp timestamp, CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("GetPrognoseTableData({region}, {filter}, {timestamp})", region, filter, timestamp);
-        return await GetTableDataInternal(region, filter, timestamp);
+        return GetTableDataInternal(region, filter, timestamp, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<IndexChartData?> GetEnergieartIndexChartData(Regions region, Resolutions resolution, EnergieartTypes filter)
+    public Task<IndexChartData> GetEnergieartIndexChartData(Regions region, Resolutions resolution, EnergieartTypes filter, CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("GetEnergieartIndexChartData({region}, {resolution}, {filter})", region, resolution, filter);
-        return await GetIndexChartDataInternal(region, resolution, filter);
+        return GetIndexChartDataInternal(region, resolution, filter.Stromerzeugung, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<ChartResult> GetEnergieartChartData(Regions region, EnergieartTypes filter, Resolutions resolution, SmardTimestamp timestamp)
+    public Task<ChartResult> GetEnergieartChartData(Regions region, EnergieartTypes filter, Resolutions resolution, SmardTimestamp timestamp, CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("GetEnergieartChartData({region}, {filter}, {resolution}, {timestamp})", region, filter, resolution, timestamp);
-        return await GetChartDataInternal(region, filter, resolution, timestamp);
+        return GetChartDataInternal(region, filter.Stromerzeugung, resolution, timestamp, cancellationToken);
     }
 
     /// <inheritdoc/>
-    public async Task<TableResult> GetEnergieartTableData(Regions region, EnergieartTypes filter, SmardTimestamp timestamp)
+    public Task<TableResult> GetEnergieartTableData(Regions region, EnergieartTypes filter, SmardTimestamp timestamp, CancellationToken cancellationToken = default)
     {
         _logger.LogDebug("GetEnergieartTableData({region}, {filter}, {timestamp})", region, filter, timestamp);
-        return await GetTableDataInternal(region, filter, timestamp);
+        return GetTableDataInternal(region, filter, timestamp, cancellationToken);
     }
-    #region Private methods
 
-    private async Task<IndexChartData?> GetIndexChartDataInternal(Regions region, Resolutions resolution, SmardFilterType filter)
+    /// <inheritdoc />
+    public Task<IndexChartData> GetInstallierteLeistung(Regions region, Resolutions resolution, EnergieartTypes filter, CancellationToken cancellationToken = default)
+    {
+        _logger.LogDebug("GetInstallierteLeistung({region}, {resolution}, {filter})", region, resolution, filter);
+        return GetIndexChartDataInternal(region, resolution, filter.Installiert, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<ChartResult> GetInstallierteLeistungChartData(Regions region, EnergieartTypes filter, Resolutions resolution, SmardTimestamp timestamp, CancellationToken cancellationToken = default)
+    {
+        _logger.LogDebug("GetInstallierteLeistungChartData({region}, {filter}, {resolution}, {timestamp})", region, filter, resolution, timestamp);
+        return GetChartDataInternal(region, filter.Installiert, resolution, timestamp, cancellationToken);
+    }
+
+    private async Task<IndexChartData> GetIndexChartDataInternal(Regions region, Resolutions resolution, string filter, CancellationToken cancellationToken)
     {
         var endpoint = $"chart_data/{filter}/{region}/index_{resolution}.json";
-        var jsonString = await SendHttpGetRequest(endpoint);
-
-        var chartData = JsonSerializer.Deserialize<IndexChartDataInternal>(jsonString);
+        var json = await SendHttpGetRequest(endpoint, cancellationToken).ConfigureAwait(false);
+        var chartData = Deserialize<IndexChartDataInternal>(json, endpoint, "index chart");
 
         _logger.LogTrace("GetIndexChartDataInternal({region}, {resolution}, {filter}) => {chartData}", region, resolution, filter, chartData);
 
-        return chartData == null ? null : new IndexChartData(chartData);
+        return new IndexChartData(chartData);
     }
 
-    private async Task<ChartResult> GetChartDataInternal(Regions region, SmardFilterType filter, Resolutions resolution, SmardTimestamp timestamp)
+    private async Task<ChartResult> GetChartDataInternal(Regions region, string filter, Resolutions resolution, SmardTimestamp timestamp, CancellationToken cancellationToken)
     {
         var endpoint = $"chart_data/{filter}/{region}/{filter}_{region}_{resolution}_{timestamp.Value}.json";
-        var json = await SendHttpGetRequest(endpoint);
-
-        if (json == null)
-            throw new Exception();
-
-        var chartResultInternal = JsonSerializer.Deserialize<ChartResultInternal>(json);
-
-        if (chartResultInternal == null)
-            throw new Exception();
-
-
+        var json = await SendHttpGetRequest(endpoint, cancellationToken).ConfigureAwait(false);
+        var chartResultInternal = Deserialize<ChartResultInternal>(json, endpoint, "chart");
         var chartResult = new ChartResult(chartResultInternal);
 
         _logger.LogTrace("GetChartDataInternal({region}, {filter}, {resolution}, {timestamp}) => {chartResult}", region, filter, resolution, timestamp, chartResult);
@@ -150,38 +148,76 @@ public sealed class SmardApiClient : ISmardApiClient
         return chartResult;
     }
 
-    private async Task<TableResult> GetTableDataInternal(Regions region, SmardFilterType filter, SmardTimestamp timestamp)
+    private async Task<TableResult> GetTableDataInternal(Regions region, SmardFilterType filter, SmardTimestamp timestamp, CancellationToken cancellationToken)
     {
-
         var endpoint = $"table_data/{filter}/{region}/{filter}_{region}_quarterhour_{timestamp.Value}.json";
-        var json = await SendHttpGetRequest(endpoint);
-        if (json == null)
-            throw new Exception();
-
-        var chartResultInternal = JsonSerializer.Deserialize<TableResultInternal>(json);
-
-        if (chartResultInternal == null)
-            throw new Exception();
-
-        var tableResult = new TableResult(chartResultInternal);
+        var json = await SendHttpGetRequest(endpoint, cancellationToken).ConfigureAwait(false);
+        var tableResultInternal = Deserialize<TableResultInternal>(json, endpoint, "table");
+        var tableResult = new TableResult(tableResultInternal);
 
         _logger.LogTrace("GetTableDataInternal({region}, {filter}, {timestamp}) => {tableResult}", region, filter, timestamp, tableResult);
 
         return tableResult;
     }
 
-    private async Task<string> SendHttpGetRequest(string endpoint)
+    private static T Deserialize<T>(string json, string endpoint, string resultKind)
     {
-        if (endpoint == null)
-            throw new ArgumentNullException(nameof(endpoint));
-        _logger.LogTrace("SendHttpGetRequest({endpoint})", endpoint);
-        var response = await HttpClient.GetAsync(endpoint);
-        _logger.LogTrace("SendHttpGetRequest({endpoint}) => {statusCode}", endpoint, response.StatusCode);
-        response.EnsureSuccessStatusCode();
-        return await response.Content.ReadAsStringAsync();
+        try
+        {
+            var result = JsonSerializer.Deserialize<T>(json);
+            return result ?? throw new SmardApiException($"SMARD returned an empty {resultKind} response.", endpoint);
+        }
+        catch (JsonException ex)
+        {
+            throw new SmardApiException($"SMARD returned invalid {resultKind} JSON.", endpoint, innerException: ex);
+        }
     }
 
-    #endregion
+    private async Task<string> SendHttpGetRequest(string endpoint, CancellationToken cancellationToken)
+    {
+        if (endpoint == null)
+        {
+            throw new ArgumentNullException(nameof(endpoint));
+        }
+
+        _logger.LogTrace("SendHttpGetRequest({endpoint})", endpoint);
+
+        HttpResponseMessage response;
+        try
+        {
+            response = await HttpClient.GetAsync(endpoint, cancellationToken).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (HttpRequestException ex)
+        {
+            throw new SmardApiException("SMARD request failed.", endpoint, innerException: ex);
+        }
+
+        _logger.LogTrace("SendHttpGetRequest({endpoint}) => {statusCode}", endpoint, response.StatusCode);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new SmardApiException($"SMARD request failed with HTTP {(int)response.StatusCode} ({response.StatusCode}).", endpoint, response.StatusCode);
+        }
+
+        try
+        {
+            var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            return content;
+        }
+        catch (OperationCanceledException)
+        {
+            throw;
+        }
+        catch (Exception ex) when (ex is IOException || ex is ObjectDisposedException)
+        {
+            throw new SmardApiException("Failed to read SMARD response content.", endpoint, response.StatusCode, ex);
+        }
+    }
 
     /// <inheritdoc />
     public void Dispose()

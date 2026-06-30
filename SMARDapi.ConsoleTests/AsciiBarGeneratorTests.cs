@@ -2,7 +2,7 @@
 
 using System.Text;
 
-namespace SMARDapi.Console.Tests;
+namespace SMARDapi.CommandLine.Tests;
 
 [TestClass]
 public class AsciiBarGeneratorTests
@@ -13,7 +13,7 @@ public class AsciiBarGeneratorTests
         // Arrange
         var generator = new AsciiBarGenerator("ENERGIEART", 100);
         var value = 40;
-        var expectedBar = "ENERGIEART          [" + new string('#', 19) + new string(' ', 29) + "]    40/100";
+        var expectedBar = "ENERGIEART          [" + new string('#', 19) + new string(' ', 29) + "]  40%";
 
         // Act
         var result = generator.GenerateAsciiBar(value);
@@ -29,7 +29,7 @@ public class AsciiBarGeneratorTests
         // Arrange
         var generator = new AsciiBarGenerator("ENERGIEART", 100);
         var value = 0;
-        var expectedBar = "ENERGIEART          [" + new string(' ', 48) + "]     0/100";
+        var expectedBar = "ENERGIEART          [" + new string(' ', 48) + "]   0%";
 
         // Act
         var result = generator.GenerateAsciiBar(value);
@@ -45,7 +45,7 @@ public class AsciiBarGeneratorTests
         // Arrange
         var generator = new AsciiBarGenerator("ENERGIEART", 100);
         var value = 100;
-        var expectedBar = "ENERGIEART          [" + new string('#', 48) + "]   100/100";
+        var expectedBar = "ENERGIEART          [" + new string('#', 48) + "] 100%";
 
         // Act
         var result = generator.GenerateAsciiBar(value);
@@ -60,7 +60,7 @@ public class AsciiBarGeneratorTests
         // Arrange
         var generator = new AsciiBarGenerator("ENERGIEART", 100);
         var value = 150;
-        var expectedBar = "ENERGIEART          [" + new string('#', 48) + "]   150/100";
+        var expectedBar = "ENERGIEART          [" + new string('#', 48) + "] 150%";
 
         // Act
         var result = generator.GenerateAsciiBar(value);

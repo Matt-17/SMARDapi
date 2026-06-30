@@ -1,16 +1,16 @@
-﻿namespace SMARDapi.Console;
+namespace SMARDapi.CommandLine;
 
 public class AsciiBarGenerator
 {
     public string Title { get; set; }
-    public int MaxValue { get; set; }
+    public decimal MaxValue { get; set; }
 
     public static int TitleLength = 20;
     public static int BarLength = 50;
     public static int ValueLength = 10;
     public static char FillCharacter = '#';
 
-    public AsciiBarGenerator(string title, int maxValue)
+    public AsciiBarGenerator(string title, decimal maxValue)
     {
         Title = title;
         MaxValue = maxValue;
@@ -18,24 +18,33 @@ public class AsciiBarGenerator
 
     public string GenerateAsciiBar(decimal value)
     {
-        var titleLength = Math.Min(20, Title.Length);
-        var paddedTitle = Title.PadRight(20);
+        var paddedTitle = FormatTitle(Title);
+        var innerBarLength = Math.Max(0, BarLength - 2);
+        var percentage = MaxValue <= 0 ? 0 : value / MaxValue;
+        var filledLength = (int)Math.Round(percentage * innerBarLength);
 
-        var maxValue = MaxValue;
-        var barLength = BarLength - 2;
-        var filledLength = (int)Math.Round((value / maxValue) * barLength);
-
-        // clamp
-        filledLength = Math.Min(filledLength, barLength);
+        filledLength = Math.Min(filledLength, innerBarLength);
         filledLength = Math.Max(filledLength, 0);
-        
-        var emptyLength = barLength - filledLength;
 
+        var emptyLength = innerBarLength - filledLength;
         var bar = "[" + new string(FillCharacter, filledLength) + new string(' ', emptyLength) + "]";
-
-        var valueText = $"{value}/{MaxValue}".PadLeft(10).Substring(0, 10);
+        var valueText = $"{percentage * 100:F0}%".PadLeft(5);
 
         return $"{paddedTitle}{bar}{valueText}";
     }
 
+    public void PrintAsciiBar(decimal value)
+    {
+        Console.WriteLine(GenerateAsciiBar(value));
+    }
+
+    private static string FormatTitle(string title)
+    {
+        var maxTitleLength = Math.Max(0, TitleLength);
+        var trimmedTitle = title.Length > maxTitleLength
+            ? title[..maxTitleLength]
+            : title;
+
+        return trimmedTitle.PadRight(maxTitleLength);
+    }
 }

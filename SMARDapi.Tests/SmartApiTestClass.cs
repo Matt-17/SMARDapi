@@ -1,3 +1,5 @@
+using System.Net;
+
 using RichardSzalay.MockHttp;
 
 using SMARDapi.Models;
@@ -49,6 +51,40 @@ public class SmartApiTestClass
         Assert.AreEqual(6, result.Timestamps.Count);
         Assert.AreEqual(1514761200000, result.Timestamps[0].Value);
         Assert.AreEqual(1672527600000, result.Timestamps[5].Value);
+    }
+
+    [TestMethod]
+    public async Task TestMarktpreisIndexChartData_ErrorStatus_ThrowsSmardApiException()
+    {
+        // Arrange
+        const string path = "chart_data/4169/DE/index_day.json";
+        var apiUrl = GetApiUrl(path);
+        _httpMock.When(apiUrl).Respond(HttpStatusCode.InternalServerError);
+
+        // Act
+        var exception = await ThrowsAsync<SmardApiException>(() =>
+            _client.GetMarktpreisIndexChartData(Regions.DE, Resolutions.Day, MarktpreisTypes.DeutschlandLuxemburg));
+
+        // Assert
+        Assert.AreEqual(path, exception.Endpoint);
+        Assert.AreEqual(HttpStatusCode.InternalServerError, exception.StatusCode);
+    }
+
+    [TestMethod]
+    public async Task TestMarktpreisIndexChartData_InvalidJson_ThrowsSmardApiException()
+    {
+        // Arrange
+        const string path = "chart_data/4169/DE/index_day.json";
+        var apiUrl = GetApiUrl(path);
+        _httpMock.When(apiUrl).Respond("application/json", "{");
+
+        // Act
+        var exception = await ThrowsAsync<SmardApiException>(() =>
+            _client.GetMarktpreisIndexChartData(Regions.DE, Resolutions.Day, MarktpreisTypes.DeutschlandLuxemburg));
+
+        // Assert
+        Assert.AreEqual(path, exception.Endpoint);
+        Assert.IsNotNull(exception.InnerException);
     }
 
     [TestMethod]
@@ -306,5 +342,21 @@ public class SmartApiTestClass
     private static string GetApiUrl(string path)
     {
         return SmardApiClient.BaseUrl + path;
+    }
+
+    private static async Task<TException> ThrowsAsync<TException>(Func<Task> action)
+        where TException : Exception
+    {
+        try
+        {
+            await action();
+        }
+        catch (TException exception)
+        {
+            return exception;
+        }
+
+        Assert.Fail($"Expected exception of type {typeof(TException).FullName}.");
+        throw new InvalidOperationException("Unreachable after Assert.Fail.");
     }
 }

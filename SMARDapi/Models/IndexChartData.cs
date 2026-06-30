@@ -1,16 +1,24 @@
-﻿using SMARDapi.Models.Internal;
+using SMARDapi.Models.Internal;
 
 namespace SMARDapi.Models;
 
 /// <summary>
-/// Represents the result of a chart query.
+/// Represents the result of a chart index query.
 /// </summary>
 public sealed class IndexChartData
 {
     /// <summary>
-    /// List of timestamps for the chart data.
+    /// Gets the available timestamps for the chart data.
     /// </summary>
     public IReadOnlyList<SmardTimestamp> Timestamps { get; }
+
+    /// <summary>
+    /// Creates an empty index chart data result.
+    /// </summary>
+    public IndexChartData()
+    {
+        Timestamps = new List<SmardTimestamp>();
+    }
 
     internal IndexChartData(IndexChartDataInternal dataInternal)
     {

@@ -5,6 +5,8 @@
 /// </summary>
 internal static class UnixTime
 {
+    private static readonly DateTime UnixEpoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
     /// <summary>
     /// Converts the specified <see cref="DateTime"/> object to a Unix timestamp.
     /// </summary>
@@ -12,7 +14,7 @@ internal static class UnixTime
     /// <returns>A Unix timestamp as a long.</returns>
     public static long GetUnixTimestamp(DateTime dateTime)
     {
-        var timeSpan = dateTime.ToUniversalTime() - DateTime.UnixEpoch;
+        var timeSpan = dateTime.ToUniversalTime() - UnixEpoch;
         return (long)timeSpan.TotalMilliseconds;
     }
 
@@ -23,7 +25,7 @@ internal static class UnixTime
     /// <returns>A <see cref="DateTime"/> object in the local time zone.</returns>
     public static DateTime FromUnixTimestamp(long timestamp)
     {
-        return DateTime.UnixEpoch.AddMilliseconds(timestamp).ToLocalTime();
+        return UnixEpoch.AddMilliseconds(timestamp).ToLocalTime();
     }
 
     /// <summary>

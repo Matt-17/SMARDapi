@@ -1,37 +1,74 @@
-name: NuGet package
+name: Release
 
 on:
-  release:
-    types: [published]
-    
-jobs:
-  build:
+  push:
+    tags:
+      - 'v*'
 
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Publish NuGet package and GitHub release
     env:
-      BUILD_CONFIG: 'Release'
-      SOLUTION: 'SMARDapi.sln'
+      BUILD_CONFIG: Release
+      SOLUTION: SMARDapi.sln
 
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
 
-    - name: Restore dependencies
-      run: nuget restore $SOLUTION
+      - name: Derive package version from tag
+        run: |
+          tag="${{ github.ref_name }}"
+          version="${tag#v}"
+          if [[ "$tag" == "$version" ]]; then
+            echo "::error::Release tag must start with v."
+            exit 1
+          fi
+          if [[ ! "$version" =~ ^[0-9]+(\.[0-9]+){2}(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Release tag must look like v1.2.3 or v1.2.3-preview.1."
+            exit 1
+          fi
+          echo "PACKAGE_VERSION=$version" >> "$GITHUB_ENV"
+          echo "Package version: $version"
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore $SOLUTION
 
-    - name: Build
-      run: dotnet build $SOLUTION --configuration $BUILD_CONFIG 
+      - name: Build
+        run: dotnet build $SOLUTION --configuration $BUILD_CONFIG --no-restore /p:Version=$PACKAGE_VERSION /p:PackageVersion=$PACKAGE_VERSION
 
-    - name: Run tests
-      run: dotnet test /p:Configuration=$BUILD_CONFIG --no-restore --no-build --verbosity normal
-      
-    - name: Publish
-      run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+      - name: Run tests
+        run: dotnet test $SOLUTION --configuration $BUILD_CONFIG --no-restore --no-build --verbosity normal
+
+      - name: Pack
+        run: dotnet pack SMARDapi/SMARDapi.csproj --configuration $BUILD_CONFIG --no-build --output artifacts /p:Version=$PACKAGE_VERSION /p:PackageVersion=$PACKAGE_VERSION
+
+      - name: Extract release notes from tag
+        run: |
+          notes="$(git tag -l "${{ github.ref_name }}" --format="%(contents)")"
+          if [[ -z "${notes// }" ]]; then
+            notes="SMARDapi $PACKAGE_VERSION"
+          fi
+          printf "%s\n" "$notes" > release-notes.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body_path: release-notes.md
+          files: artifacts/*.nupkg
+
+      - name: Publish to NuGet
+        run: dotnet nuget push artifacts/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key "${{ secrets.NUGET_API_KEY }}" --skip-duplicate

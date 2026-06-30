@@ -8,5 +8,5 @@ internal class ChartResultInternal
     public MetaDataInternal MetaData { get; set; } = null!;
 
     [JsonPropertyName("series")]
-    public double[][] Series { get; set; } = null!;
+    public double?[][] Series { get; set; } = null!;
 }

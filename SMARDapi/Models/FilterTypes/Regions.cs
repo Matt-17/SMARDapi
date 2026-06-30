@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 
 namespace SMARDapi.Models.FilterTypes;
 
 /// <summary>
 /// Represents the SMARD (Strommarktdaten) region filter options.
 /// </summary>
-public sealed class Regions : FilterBase<Regions>   , IEnumerable<Regions>
+public sealed class Regions : FilterBase<Regions>, IEnumerable<Regions>
 {
     /// <summary>
     /// Represents the region "DE" (Germany) with the value "DE".
@@ -62,14 +62,14 @@ public sealed class Regions : FilterBase<Regions>   , IEnumerable<Regions>
     /// </summary>
     public static Regions Creos = new("Creos");
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="Regions"/> class.
-    /// </summary>
-    /// <param name="value">The string value representing the region.</param>
     private Regions(string value) : base(value)
     {
     }
 
+    /// <summary>
+    /// Enumerates all predefined region filters.
+    /// </summary>
+    /// <returns>An enumerator over all predefined region filters.</returns>
     public IEnumerator<Regions> GetEnumerator()
     {
         yield return DE;

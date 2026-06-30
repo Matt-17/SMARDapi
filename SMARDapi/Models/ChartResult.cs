@@ -19,11 +19,16 @@ public sealed class ChartResult
         Series = new List<SmardValue>();
         foreach (var series in chartResultInternal.Series)
         {
-            var timestamp = (long)series[0];
+            var timestamp = series[0] ?? throw new SmardApiException("SMARD chart series is missing a timestamp.");
+            var rawValue = series.Length > 1 ? series[1] : null;
+            var value = rawValue.HasValue
+                ? Convert.ToDecimal(rawValue.Value)
+                : (decimal?)null;
+
             Series.Add(new SmardValue
             {
-                Timestamp = new SmardTimestamp(timestamp),
-                Value = (decimal?)series[1]
+                Timestamp = new SmardTimestamp(Convert.ToInt64(timestamp)),
+                Value = value
             });
         }
     }

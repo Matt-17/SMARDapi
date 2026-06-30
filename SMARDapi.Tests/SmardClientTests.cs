@@ -67,6 +67,37 @@ public class SmardClientTests
     }
 
     [TestMethod]
+    public async Task GetEnergieartChartData_ValidFilter_ReturnsChartData()
+    {
+        // Arrange
+        var filter = EnergieartTypes.Biomasse;
+        var indexChartDataInternal = new IndexChartDataInternal { Timestamps = new[] { 1627855200000, 1628460000000, 1629064800000 } };
+        var chartResultInternal = new ChartResultInternal
+        {
+            MetaData = new MetaDataInternal
+            {
+                Version = 1,
+                Created = 1627858357549
+            },
+            Series = new[]
+            {
+                new double?[] { 1647817200000, 1225 }
+            }
+        };
+
+        _apiClient.GetEnergieartIndexChartData(Regions.DE, Resolutions.Hour, filter).Returns(new IndexChartData(indexChartDataInternal));
+        _apiClient.GetEnergieartChartData(Regions.DE, filter, Resolutions.Hour, Arg.Any<SmardTimestamp>()).Returns(new ChartResult(chartResultInternal));
+
+        // Act
+        var result = await _client.GetEnergieartChartData(filter);
+
+        // Assert
+        await _apiClient.Received(1).GetEnergieartIndexChartData(Regions.DE, Resolutions.Hour, filter);
+        await _apiClient.Received(1).GetEnergieartChartData(Regions.DE, filter, Resolutions.Hour, Arg.Any<SmardTimestamp>());
+        Assert.IsNotNull(result);
+    }
+
+    [TestMethod]
     public async Task GetPrognoseChartData_ValidFilter_ReturnsChartData()
     {
         // Arrange
@@ -82,7 +113,7 @@ public class SmardClientTests
             },
             Series = new[]
             {
-                new double[] { 1647817200000, 1225 }
+                new double?[] { 1647817200000, 1225 }
             }
         };
 
