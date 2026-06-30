@@ -121,7 +121,7 @@ dotnet run --project SMARDapi.Console -- --watch --interval=60
 Run the normal test suite:
 
 ```powershell
-dotnet test SMARDapi.sln --no-restore
+dotnet test SMARDapi.slnx --no-restore
 ```
 
 Smoke tests call live SMARD endpoints and are disabled by default. Enable them explicitly:
@@ -134,6 +134,8 @@ dotnet test SMARDapi.Tests\SMARDapi.Tests.csproj --filter TestCategory=Smoke
 ## Releases
 
 NuGet package versions are derived from the git tag. Push tags such as `v1.0.7`; the release workflow strips the leading `v`, creates a GitHub Release, attaches the package, and publishes `SMARDapi` as version `1.0.7`.
+
+NuGet publishing uses Trusted Publishing. Configure a nuget.org Trusted Publishing policy for `.github/workflows/release.yml` and set the GitHub repository variable `NUGET_USER` to the nuget.org username that created the policy.
 
 Use an annotated tag if you want the tag message to become the GitHub Release notes:
 

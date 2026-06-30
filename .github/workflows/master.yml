@@ -19,7 +19,7 @@ jobs:
   build:
     env:
       BUILD_CONFIG: Release
-      SOLUTION: SMARDapi.sln
+      SOLUTION: SMARDapi.slnx
 
     runs-on: ubuntu-latest
 

@@ -7,15 +7,17 @@ on:
 
 permissions:
   contents: write
+  id-token: write
 
 jobs:
   release:
     name: Publish NuGet package and GitHub release
     env:
       BUILD_CONFIG: Release
-      SOLUTION: SMARDapi.sln
+      SOLUTION: SMARDapi.slnx
 
     runs-on: ubuntu-latest
+    environment: release
 
     steps:
       - uses: actions/checkout@v4
@@ -70,5 +72,11 @@ jobs:
           body_path: release-notes.md
           files: artifacts/*.nupkg
 
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: nuget-login
+        with:
+          user: ${{ vars.NUGET_USER }}
+
       - name: Publish to NuGet
-        run: dotnet nuget push artifacts/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key "${{ secrets.NUGET_API_KEY }}" --skip-duplicate
+        run: dotnet nuget push artifacts/*.nupkg --source "https://api.nuget.org/v3/index.json" --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --skip-duplicate
