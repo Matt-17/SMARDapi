@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Project Path="SMARDapi.Console/SMARDapi.Console.csproj" />
+  <Project Path="SMARDapi.ConsoleTests/SMARDapi.ConsoleTests.csproj" />
+  <Project Path="SMARDapi.Tests/SMARDapi.Tests.csproj" />
+  <Project Path="SMARDapi/SMARDapi.csproj" />
+</Solution>
